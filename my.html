@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我們的專屬時光 | Our Love Story</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Helvetica Neue", sans-serif;
+      transition: background-color 0.6s ease, color 0.4s ease, border-color 0.4s ease, background 0.6s ease;
+    }
+
+    /* ===== 白天主題 (暖杏粉、夕陽柔黃) ===== */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #fae1dd 45%, #fcd5ce 100%);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(255, 255, 255, 0.85);
+      --card-shadow: 0 20px 45px rgba(184, 120, 110, 0.16);
+      --ambient-glow: radial-gradient(circle, rgba(255, 225, 205, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+      --title-color: #704344;
+      --sub-color: #a88b8b;
+      --num-color: #9d504e;
+      --badge-bg: linear-gradient(135deg, #e39d96 0%, #c97a73 100%);
+      --badge-shadow: rgba(201, 122, 115, 0.28);
+      --box-bg: rgba(255, 255, 255, 0.95);
+      --box-border: rgba(245, 225, 220, 0.85);
+      --quote-bg: rgba(250, 240, 235, 0.8);
+      --quote-border: #d68c85;
+      --quote-text: #8c5b5b;
+      --tab-bg: rgba(235, 215, 210, 0.5);
+      --tab-active-bg: #fff;
+      --tab-active-text: #8d4f4e;
+      --tab-text: #9f7d7e;
+      --tag-bg: rgba(255, 245, 242, 0.9);
+      --tag-border: #f0d0cb;
+      --tag-text: #9d5a57;
+      --particle-color: rgba(235, 150, 140, 0.35);
+      --copyright-color: #b59595;
+    }
+
+    /* ===== 夜晚主題 (暖可可、微醺燭光、焦糖暖橘) ===== */
+    body.night-mode {
+      --bg-gradient: linear-gradient(135deg, #241613 0%, #3a221c 50%, #4d2b24 100%);
+      --card-bg: rgba(46, 29, 25, 0.9);
+      --card-border: rgba(255, 225, 205, 0.18);
+      --card-shadow: 0 20px 50px rgba(20, 10, 8, 0.6);
+      --ambient-glow: radial-gradient(circle, rgba(244, 162, 97, 0.32) 0%, rgba(231, 111, 81, 0.12) 50%, rgba(0, 0, 0, 0) 75%);
+      --title-color: #faeedf;
+      --sub-color: #d1b8ab;
+      --num-color: #f7a972;
+      --badge-bg: linear-gradient(135deg, #d97757 0%, #b85a3a 100%);
+      --badge-shadow: rgba(217, 119, 87, 0.4);
+      --box-bg: rgba(61, 40, 35, 0.95);
+      --box-border: rgba(255, 225, 205, 0.14);
+      --quote-bg: rgba(61, 40, 35, 0.75);
+      --quote-border: #d97757;
+      --quote-text: #ebd5ca;
+      --tab-bg: rgba(33, 19, 16, 0.65);
+      --tab-active-bg: #593933;
+      --tab-active-text: #faeedf;
+      --tab-text: #c4a99d;
+      --tag-bg: rgba(56, 36, 32, 0.85);
+      --tag-border: rgba(255, 225, 205, 0.12);
+      --tag-text: #f0cbb5;
+      --particle-color: rgba(247, 169, 114, 0.25);
+      --copyright-color: #9c7f76;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-gradient);
+      padding: 25px 15px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 背景柔光氛圍燈 */
+    .ambient-light {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      background: var(--ambient-glow);
+      border-radius: 50%;
+      top: 8%;
+      left: 10%;
+      z-index: 0;
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    /* 飄動微光粒子 */
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      color: var(--particle-color);
+      user-select: none;
+      animation: floatUp 8s infinite linear;
+      font-size: 16px;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      20% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* 頂部手動切換按鈕 */
+    .theme-toggle-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: var(--box-bg);
+      border: 1px solid var(--box-border);
+      color: var(--title-color);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      border-radius: 30px;
+      padding: 38px 26px 28px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+      border: 1px solid var(--card-border);
+    }
+
+    /* --- 密碼鎖定畫面 --- */
+    #lockScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .lock-icon {
+      font-size: 48px;
+      margin-bottom: 14px;
+      animation: gentle-pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes gentle-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .lock-title {
+      font-size: 22px;
+      color: var(--title-color);
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .lock-desc {
+      font-size: 13px;
+      color: var(--sub-color);
+      margin-bottom: 24px;
+    }
+
+    .pass-input {
+      width: 100%;
+      max-width: 220px;
+      padding: 13px;
+      border: 2px solid var(--box-border);
+      border-radius: 16px;
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 6px;
+      outline: none;
+      color: var(--title-color);
+      background: var(--box-bg);
+      margin-bottom: 16px;
+    }
+
+    .pass-input:focus {
+      border-color: #d97757;
+    }
+
+    .btn-unlock {
+      background: var(--badge-bg);
+      color: #fff;
+      border: none;
+      padding: 12px 36px;
+      border-radius: 22px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 18px var(--badge-shadow);
+    }
+
+    .error-msg {
+      color: #e63946;
+      font-size: 13px;
+      margin-top: 12px;
+      height: 18px;
+      opacity: 0;
+    }
+
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    /* --- 計時主畫面 --- */
+    #mainScreen {
+      display: none;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: all 0.5s ease-out;
+    }
+
+    #mainScreen.active {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .header-icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .header-icons span {
+      font-size: 28px;
+    }
+
+    .heart-main {
+      font-size: 38px !important;
+      animation: heartbeat 1.6s infinite ease-in-out;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.18); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.12); }
+    }
+
+    h1 {
+      font-size: 25px;
+      color: var(--title-color);
+      margin: 4px 0;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--sub-color);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* 模式切換鈕 */
+    .mode-switch {
+      display: flex;
+      background: var(--tab-bg);
+      padding: 4px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--tab-text);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .mode-btn.active {
+      background: var(--tab-active-bg);
+      color: var(--tab-active-text);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    /* 總天數徽章 */
+    .total-badge {
+      display: inline-block;
+      background: var(--badge-bg);
+      color: #fff;
+      padding: 7px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px var(--badge-shadow);
+      letter-spacing: 0.5px;
+    }
+
+    /* 網格展示區塊 */
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .counter-box {
+      background: var(--box-bg);
+      padding: 15px 4px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--box-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .box-icon {
+      font-size: 14px;
+      margin-bottom: 2px;
+      opacity: 0.8;
+    }
+
+    .num {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--num-color);
+      line-height: 1.2;
+    }
+
+    .unit {
+      font-size: 12px;
+      color: var(--sub-color);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* 浪漫生活足跡標籤牆 */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin: 18px 0 16px;
+    }
+
+    .love-tag {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--tag-text);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* 浪漫語錄卡片 */
+    .quote-card {
+      margin-top: 10px;
+      background: var(--quote-bg);
+      padding: 16px 18px;
+      border-radius: 18px;
+      border-left: 4px solid var(--quote-border);
+      text-align: left;
+      position: relative;
+    }
+
+    .quote-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .quote-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--title-color);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-next-quote {
+      background: var(--box-bg);
+      border: 1px solid var(--box-border);
+      color: var(--quote-text);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .quote-text {
+      font-size: 13px;
+      color: var(--quote-text);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* 下個紀念日倒數欄 */
+    .next-milestone {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--sub-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ===== BRIAN 專屬版權宣告區塊 ===== */
+    .copyright-footer {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--box-border);
+      font-size: 11px;
+      color: var(--copyright-color);
+      letter-spacing: 0.8px;
+      line-height: 1.5;
+    }
+
+    .copyright-footer .author {
+      font-weight: 700;
+      color: var(--num-color);
+      letter-spacing: 1.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景柔光與漂浮粒子 -->
+  <div class="ambient-light"></div>
+  <div class="particles-container" id="particlesBox"></div>
+
+  <div class="card" id="lockCard">
+    <!-- 日夜手動切換鈕 -->
+    <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()" title="切換日夜氛圍">🌙</button>
+
+    <!-- 密碼輸入卡片 (密碼: 919) -->
+    <div id="lockScreen">
+      <div class="lock-icon">🔐✨</div>
+      <div class="lock-title">專屬我們的私密空間</div>
+      <div class="lock-desc">請輸入彼此的專屬密碼解鎖回憶 💌</div>
+      <input type="password" id="passcodeInput" class="pass-input" placeholder="密碼" maxlength="10" />
+      <button class="btn-unlock" onclick="checkPassword()">開啟專屬回憶 💖</button>
+      <div class="error-msg" id="errorMsg">密碼不對喔，再想一下 💕</div>
+    </div>
+
+    <!-- 計時主畫面 -->
+    <div id="mainScreen">
+      <div class="header-icons">
+        <span>🥂</span>
+        <span class="heart-main">💖</span>
+        <span>🌹</span>
+      </div>
+      <h1>我們牽手走過</h1>
+      <div class="subtitle">
+        <span>🗓️ 愛情起點：2023 年 2 月 14 日</span>
+      </div>
+
+      <!-- 模式切換按鈕 -->
+      <div class="mode-switch">
+        <button class="mode-btn active" onclick="setMode('standard', this)">🌱 年月日</button>
+        <button class="mode-btn" onclick="setMode('seasons', this)">🌸 季節換算</button>
+        <button class="mode-btn" onclick="setMode('weeks', this)">🗓️ 浪漫週數</button>
+      </div>
+
+      <!-- 累積總天數徽章 -->
+      <div class="total-badge" id="totalBadgeText">✨ 已累積相伴 0 天 ✨</div>
+
+      <!-- 第一排數值 (動態切換：年 / 季 / 週) -->
+      <div class="counter-grid" id="topGrid">
+        <div class="counter-box">
+          <div class="box-icon" id="icon1">📅</div>
+          <div class="num" id="val1">0</div>
+          <div class="unit" id="unit1">年</div>
+        </div>
+        <div class="counter-box">
+          <div class="box-icon" id="icon2">🌙</div>
+          <div class="num" id="val2">0</div>
+          <div class="unit" id="unit2">個月</div>
+        </div>
+        <div class="counter-box">
+          <div class="box-icon" id="icon3">☀️</div>
+          <div class="num" id="val3">0</div>
+          <div class="unit" id="unit3">天</div>
+        </div>
+      </div>
+
+      <!-- 第二排時間數值 (時 / 分 / 秒) -->
+      <div class="counter-grid">
+        <div class="counter-box">
+          <div class="box-icon">⏳</div>
+          <div class="num" id="hours">0</div>
+          <div class="unit">小時</div>
+        </div>
+        <div class="counter-box">
+          <div class="box-icon">💫</div>
+          <div class="num" id="minutes">0</div>
+          <div class="unit">分鐘</div>
+        </div>
+        <div class="counter-box">
+          <div class="box-icon">💓</div>
+          <div class="num" id="seconds">0</div>
+          <div class="unit">秒</div>
+        </div>
+      </div>
+
+      <!-- 浪漫生活足跡標籤牆 -->
+      <div class="tags-container">
+        <div class="love-tag">☕ 專屬偏愛</div>
+        <div class="love-tag">🎬 週末依偎</div>
+        <div class="love-tag">✈️ 牽手旅行</div>
+        <div class="love-tag">🍰 甜蜜日常</div>
+        <div class="love-tag">✨ 彼此守護</div>
+        <div class="love-tag">💌 始終如初</div>
+      </div>
+
+      <!-- 互動情話卡片 -->
+      <div class="quote-card">
+        <div class="quote-header">
+          <div class="quote-title">💌 寫給你的浪漫絮語</div>
+          <button class="btn-next-quote" onclick="nextQuote()">🎲 換一句情話</button>
+        </div>
+        <div class="quote-text" id="quoteText">
+          「遇見你，是我人生中最美麗的意外，也是最堅定的必然。」
+        </div>
+      </div>
+
+      <!-- 下一個紀念日倒數提示 -->
+      <div class="next-milestone" id="nextAnniversaryText">
+        🎂 距離下一個 2/14 紀念日還有 ... 天
+      </div>
+
+      <!-- 最底部 BRIAN 版權宣告 -->
+      <div class="copyright-footer">
+        Designed with ❤️ by <span class="author">BRIAN</span><br>
+        <span style="font-size: 10px; opacity: 0.75;">© 2023 - FOREVER · ALL RIGHTS RESERVED</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CORRECT_PASSWORD = "919";
+    const startDate = new Date(2023, 1, 14, 0, 0, 0); // 2023-02-14
+    let currentMode = 'standard';
+
+    // --- 浪漫標語庫 ---
+    const romanticQuotes = [
+      "「遇見你，是我人生中最美麗的意外，也是最堅定的必然。」",
+      "「想和你走過日落黃昏，看盡人間煙火，把平凡的每一天過成詩。」",
+      "「如果時間可以暫停，我希望每個有你的瞬間都變成永恆 🕯️」",
+      "「四季更迭，山河萬物，都不及你回眸時的一眼溫柔 🌸」",
+      "「世界很大，但我的宇宙中心只有你一人 🪐」",
+      "「不用做誰的英雄，只想做你一輩子的小朋友與守護者 🧸」",
+      "「愛你不是一時的衝動，而是每一分每一秒深思熟慮後的決定 ✨」",
+      "「希望未來的每一個春夏秋冬，身邊牽著的手永遠是你 🌿」",
+      "「你在身邊時，生活很甜；你不在身邊時，滿腦子都是你的甜 🍓」",
+      "「何止是心動，每一次看見你，都是重蹈覆轍的心動 💫」"
+    ];
+
+    let quoteIndex = 0;
+    function nextQuote() {
+      quoteIndex = (quoteIndex + 1) % romanticQuotes.length;
+      const quoteEl = document.getElementById('quoteText');
+      quoteEl.style.opacity = 0;
+      setTimeout(() => {
+        quoteEl.innerHTML = romanticQuotes[quoteIndex];
+        quoteEl.style.opacity = 1;
+      }, 200);
+    }
+
+    // --- 漂浮浪漫粒子產生器 ---
+    function createParticles() {
+      const box = document.getElementById('particlesBox');
+      const symbols = ['💖', '✨', '🌸', '⭐', '🕯️', '🕊️', '💫'];
+      for (let i = 0; i < 15; i++) {
+        const span = document.createElement('span');
+        span.className = 'particle';
+        span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        span.style.left = Math.random() * 100 + '%';
+        span.style.animationDuration = 6 + Math.random() * 6 + 's';
+        span.style.animationDelay = Math.random() * 5 + 's';
+        span.style.fontSize = 12 + Math.random() * 10 + 'px';
+        box.appendChild(span);
+      }
+    }
+    createParticles();
+
+    // --- 日夜主題判斷 (06:00~18:00 白天 / 18:00~06:00 暖可可夜晚) ---
+    function initTheme() {
+      const hour = new Date().getHours();
+      const isNight = hour < 6 || hour >= 18;
+      applyTheme(isNight);
+    }
+
+    function applyTheme(isNight) {
+      if (isNight) {
+        document.body.classList.add('night-mode');
+        document.getElementById('themeBtn').innerText = '☀️';
+      } else {
+        document.body.classList.remove('night-mode');
+        document.getElementById('themeBtn').innerText = '🌙';
+      }
+    }
+
+    function toggleTheme() {
+      const isNight = document.body.classList.toggle('night-mode');
+      document.getElementById('themeBtn').innerText = isNight ? '☀️' : '🌙';
+    }
+
+    initTheme();
+
+    // --- 密碼驗證 ---
+    function checkPassword() {
+      const input = document.getElementById('passcodeInput');
+      const errorMsg = document.getElementById('errorMsg');
+      const lockCard = document.getElementById('lockCard');
+
+      if (input.value === CORRECT_PASSWORD) {
+        document.getElementById('lockScreen').style.display = 'none';
+        const mainScreen = document.getElementById('mainScreen');
+        mainScreen.classList.add('active');
+        updateCounter();
+        setInterval(updateCounter, 1000);
+      } else {
+        errorMsg.style.opacity = '1';
+        lockCard.classList.add('shake');
+        input.value = '';
+        setTimeout(() => lockCard.classList.remove('shake'), 400);
+      }
+    }
+
+    document.getElementById('passcodeInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    // --- 模式切換 ---
+    function setMode(mode, btnElement) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      updateCounter();
+    }
+
+    // --- 精準時間計算與畫面渲染 ---
+    function updateCounter() {
+      const now = new Date();
+
+      // 年、月、天 精準借位計算
+      let y = now.getFullYear() - startDate.getFullYear();
+      let m = now.getMonth() - startDate.getMonth();
+      let d = now.getDate() - startDate.getDate();
+      let h = now.getHours() - startDate.getHours();
+      let min = now.getMinutes() - startDate.getMinutes();
+      let s = now.getSeconds() - startDate.getSeconds();
+
+      if (s < 0) { s += 60; min--; }
+      if (min < 0) { min += 60; h--; }
+      if (h < 0) { h += 24; d--; }
+      if (d < 0) {
+        let prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        d += prevMonthLastDay;
+        m--;
+      }
+      if (m < 0) {
+        m += 12;
+        y--;
+      }
+
+      // 總天數與總週數計算
+      let totalDiffMs = now - startDate;
+      let totalDays = Math.floor(totalDiffMs / (1000 * 60 * 60 * 24));
+      let totalWeeks = Math.floor(totalDays / 7);
+      let remDaysAfterWeeks = totalDays % 7;
+
+      // 季節計算 (每 3 個月為 1 季)
+      let totalMonths = y * 12 + m;
+      let totalSeasons = Math.floor(totalMonths / 3);
+      let remMonthsAfterSeasons = totalMonths % 3;
+
+      const val1 = document.getElementById('val1');
+      const unit1 = document.getElementById('unit1');
+      const icon1 = document.getElementById('icon1');
+      const val2 = document.getElementById('val2');
+      const unit2 = document.getElementById('unit2');
+      const icon2 = document.getElementById('icon2');
+      const val3 = document.getElementById('val3');
+      const unit3 = document.getElementById('unit3');
+      const icon3 = document.getElementById('icon3');
+      const totalBadgeText = document.getElementById('totalBadgeText');
+
+      if (currentMode === 'standard') {
+        icon1.innerText = "📅"; val1.innerText = y; unit1.innerText = "年";
+        icon2.innerText = "🌙"; val2.innerText = m; unit2.innerText = "個月";
+        icon3.innerText = "☀️"; val3.innerText = d; unit3.innerText = "天";
+        totalBadgeText.innerText = `✨ 已累積相伴 ${totalDays} 個珍貴日子 ✨`;
+      } else if (currentMode === 'seasons') {
+        icon1.innerText = "🌸"; val1.innerText = totalSeasons; unit1.innerText = "個季節";
+        icon2.innerText = "🌿"; val2.innerText = remMonthsAfterSeasons; unit2.innerText = "個月";
+        icon3.innerText = "🍂"; val3.innerText = d; unit3.innerText = "天";
+        totalBadgeText.innerText = `🌿 一起走過 ${totalSeasons} 個春夏秋冬 🍂`;
+      } else if (currentMode === 'weeks') {
+        icon1.innerText = "🗓️"; val1.innerText = totalWeeks; unit1.innerText = "週";
+        icon2.innerText = "💫"; val2.innerText = remDaysAfterWeeks; unit2.innerText = "天";
+        icon3.innerText = "💎"; val3.innerText = totalDays; unit3.innerText = "總天數";
+        totalBadgeText.innerText = `💫 牽手度過 ${totalWeeks} 個星期又 ${remDaysAfterWeeks} 天 💫`;
+      }
+
+      document.getElementById('hours').innerText = h;
+      document.getElementById('minutes').innerText = min;
+      document.getElementById('seconds').innerText = s;
+
+      // 計算下一個 2/14 紀念日倒數
+      let nextAnniv = new Date(now.getFullYear(), 1, 14, 0, 0, 0);
+      if (now > nextAnniv) {
+        nextAnniv = new Date(now.getFullYear() + 1, 1, 14, 0, 0, 0);
+      }
+      let daysToNext = Math.ceil((nextAnniv - now) / (1000 * 60 * 60 * 24));
+      document.getElementById('nextAnniversaryText').innerHTML = `🎂 距離下一個 2/14 紀念日還有 <strong>${daysToNext}</strong> 天 ✨`;
+    }
+  </script>
+</body>
+</html>
